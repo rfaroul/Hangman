@@ -2,38 +2,64 @@ var hangman = {
     words: ["Fresh Prince", "Living Single", "Martin", "Moesha", "Sister Sister", "Family Matters"],
 
     guessedLetters: [], //array of letters guessed to eventually be displayed in html
-    wordToGuess: null, //word to be guessed that's pulled from the "words" array. should it be null, not ""?
-    lettersInWordToGuess: [], 
+    wordToGuess: null, //word to be guessed that's pulled from the "words" array. this is a string
+    lettersInWordToGuess: [], //an array of letters
     letterString: [], //constantly updating this string as letters are correctly guessed
+    counter: 0,
+    letterGuessed: null,
 
-
-    setUpGame: function(){
+    setUpGame: function () {
         //generate a word from the array
-        //this.wordToGuess = this.words[Math.floor(Math.random() * this.words.length)];
-        this.wordToGuess = "Fresh Prince";
+        //this.wordToGuess = this.words[Math.floor(Math.random() * this.words.length)]; //want to eventually be able to take two words 
+        this.wordToGuess = "Moesha";
         console.log(this.wordToGuess);
         //get individual letters of the word to guess
-        this.lettersInWordToGuess = this.wordToGuess.split(" ");
+        this.lettersInWordToGuess = this.wordToGuess.split("");
         console.log(this.lettersInWordToGuess);
-        if(this.lettersInWordToGuess.length > 1){
 
-        }
         //display the word as a series of underscores
         this.visualizeWordToGuess();
         //reset the guesses counter  NOT DONE
-
+        this.counter = this.wordToGuess.length + 3;
         //empty the letters guessed div NOT DONE
+        document.getElementById("guessedLetters").innerHTML = ''
     },
 
-    visualizeWordToGuess: function(){
-        for(var i = 0; i < this.lettersInWordToGuess.length; i++){
-            //console.log("visualizeWordToGuess", this.lettersInWordToGuess);
+    visualizeWordToGuess: function () {
+        for (var i = 0; i < this.lettersInWordToGuess.length; i++) {
             this.letterString.push('_');
-            document.getElementById("guessThisWord").innerHTML = this.letterString.join(''); //accessible outside the for loop
         }
-        console.log("letterString", this.letterString.join(''));
+        document.getElementById("guessThisWord").innerHTML = this.letterString.join(''); //accessible outside the for loop
+        console.log("this.letterString is an array", this.letterString);
+    },
+
+    checkGuess: function(letter){
+        //if the guessedLetters array doesn't already container the pressed letter, add the pressed letter
+        if(this.guessedLetters.indexOf(letter) !== -1){ //if guessedLetters array contains the letter you just guessed
+            document.getElementById("playerMessage").innerHTML = "you already guessed that letter";  
+        }
+        else{
+            this.guessedLetters.push(letter);
+            document.getElementById("playerMessage").innerHTML = "you guessed: " + letter;  
+            document.getElementById("guessedLetters").innerHTML = this.guessedLetters.join(" ");
+        }    
+        console.log(this.guessedLetters);
+        //update the guessed letters div
+        
+        //if the word contains the letter guessed, update letterString 
+        if(this.wordToGuess.indexOf(letter) !== -1){
+            console.log("the word " + this.wordToGuess + " contains the letter " + letter);
+        }
     }
 } //end hangman object
+
+//on Saturday 3/31
+    //add to "visualizeWordToGuess" function
+        //if letter guessed is in the word, replace "_" with the letter guessed
+        //else insert "_"
+    //have to write checkGuess(letter) function
+        //letter = onKeyUp
+
 
 
 //FUNCTION checkGuess()
@@ -52,7 +78,12 @@ var hangman = {
 //RUN THE CODE!!!
 hangman.setUpGame();
 
+document.onkeypress = function(event){
+    this.letterGuessed = String.fromCharCode(event.which); //returns the letter that was typed
+    console.log(this.letterGuessed); 
+    hangman.checkGuess(this.letterGuessed);
 
+}
 
 
 
@@ -80,16 +111,6 @@ hangman.setUpGame();
 //     }, //element 1
 // etc. etc. more word objects
 
-// function checkGuess(){
-
-// }
-
-// //choose a word, gif, clip
-// function setUpGame() {
-//     restartGame()
-//     guessThisWord()
-
-// }
 
 
 
@@ -109,12 +130,3 @@ hangman.setUpGame();
 //else if checkGuess() is true, keep playing
 
 //else countGuesses stays the same
-
-
-// function game() {
-//     restartGame();
-//     setUpGame();
-
-// }
-
-// game();
